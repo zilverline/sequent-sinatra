@@ -20,4 +20,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec-mocks', '~> 3.2.0'
   s.add_development_dependency 'rspec-collection_matchers', '~> 1.1.2'
   s.add_development_dependency 'rspec-html-matchers', '~> 0.7.0'
+  s.add_development_dependency 'simplecov'
 end
