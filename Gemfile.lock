@@ -1,0 +1,82 @@
+GIT
+  remote: git@github.com:zilverline/sequent.git
+  revision: c47c8e6fdba2ae7c2bbd6258f8f56c5d13edafb6
+  branch: sequent-sinatra_gem
+  specs:
+    sequent (1.0.0)
+      activemodel (~> 4.0.10)
+      activerecord (~> 4.0.10)
+      oj (~> 2.10.3)
+      pg (~> 0.18.1)
+
+PATH
+  remote: .
+  specs:
+    sequent-sinatra (0.1.0)
+      rack_csrf (~> 2.5.0)
+      sequent
+      sinatra (~> 1.4.5)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activemodel (4.0.13)
+      activesupport (= 4.0.13)
+      builder (~> 3.1.0)
+    activerecord (4.0.13)
+      activemodel (= 4.0.13)
+      activerecord-deprecated_finders (~> 1.0.2)
+      activesupport (= 4.0.13)
+      arel (~> 4.0.0)
+    activerecord-deprecated_finders (1.0.4)
+    activesupport (4.0.13)
+      i18n (~> 0.6, >= 0.6.9)
+      minitest (~> 4.2)
+      multi_json (~> 1.3)
+      thread_safe (~> 0.1)
+      tzinfo (~> 0.3.37)
+    arel (4.0.2)
+    builder (3.1.4)
+    diff-lcs (1.2.5)
+    i18n (0.7.0)
+    minitest (4.7.5)
+    multi_json (1.11.0)
+    oj (2.10.4)
+    pg (0.18.1)
+    rack (1.6.0)
+    rack-protection (1.5.3)
+      rack
+    rack_csrf (2.5.0)
+      rack (>= 1.1.0)
+    rspec (3.2.0)
+      rspec-core (~> 3.2.0)
+      rspec-expectations (~> 3.2.0)
+      rspec-mocks (~> 3.2.0)
+    rspec-collection_matchers (1.1.2)
+      rspec-expectations (>= 2.99.0.beta1)
+    rspec-core (3.2.2)
+      rspec-support (~> 3.2.0)
+    rspec-expectations (3.2.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.2.0)
+    rspec-mocks (3.2.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.2.0)
+    rspec-support (3.2.2)
+    sinatra (1.4.6)
+      rack (~> 1.4)
+      rack-protection (~> 1.4)
+      tilt (>= 1.3, < 3)
+    thread_safe (0.3.5)
+    tilt (2.0.1)
+    tzinfo (0.3.43)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  rspec (~> 3.2.0)
+  rspec-collection_matchers (~> 1.1.2)
+  rspec-mocks (~> 3.2.0)
+  sequent!
+  sequent-sinatra!
