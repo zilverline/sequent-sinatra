@@ -7,7 +7,7 @@ describe Sequent::Web::Sinatra::FormHelpers, no_database: true do
 
   it "should correctly create a form" do
     form = app.html_form_for(Country.new, "/foo", :post) { "" }
-    form.should == %Q{<form action="/foo" method="POST" role="form"><p>CSRF</p></form>}
+    expect(form).to eq %Q{<form action="/foo" method="POST" role="form"><p>CSRF</p></form>}
   end
 
   it "should fail if the object of the form does not respond to to_h" do
@@ -16,7 +16,7 @@ describe Sequent::Web::Sinatra::FormHelpers, no_database: true do
 
   it "should be able to handle nil as object parameter." do
     form = app.html_form_for(nil, "/foo", :post) { "" }
-    form.should == %Q{<form action="/foo" method="POST" role="form"><p>CSRF</p></form>}
+    expect(form).to eq %Q{<form action="/foo" method="POST" role="form"><p>CSRF</p></form>}
   end
 
   it "should create a form with a fieldset" do
@@ -29,7 +29,7 @@ describe Sequent::Web::Sinatra::FormHelpers, no_database: true do
     EOF
 
     output = app.get_erb(erb_string)
-    Hash.from_xml(output).should == Hash.from_xml(%Q{<form action="/foo" method="POST" role="form"><p>CSRF</p><input id="country_name" name="country[name]" type="text" /></form>})
+    expect(Hash.from_xml(output)).to eq Hash.from_xml(%Q{<form action="/foo" method="POST" role="form"><p>CSRF</p><input id="country_name" name="country[name]" type="text" /></form>})
   end
 
   context "without a backing object" do
@@ -38,7 +38,7 @@ describe Sequent::Web::Sinatra::FormHelpers, no_database: true do
 
       it "that is empty" do
         form = app.html_form("/foo", :post) { "" }
-        form.should == %Q{<form action="/foo" method="POST" role="form"><p>CSRF</p></form>}
+        expect(form).to eq %Q{<form action="/foo" method="POST" role="form"><p>CSRF</p></form>}
       end
 
       it "that has a single field without a fieldset" do
@@ -49,12 +49,12 @@ describe Sequent::Web::Sinatra::FormHelpers, no_database: true do
         EOF
 
         output = app.get_erb(erb_string)
-        Hash.from_xml(output).should == Hash.from_xml(%Q{<form action="/foo" method="POST" role="form" ><p>CSRF</p><input id="name" name="name" type="text" /></form>})
+        expect(Hash.from_xml(output)).to eq Hash.from_xml(%Q{<form action="/foo" method="POST" role="form" ><p>CSRF</p><input id="name" name="name" type="text" /></form>})
       end
 
       it "should calculate the i18n name" do
         form = Sequent::Web::Sinatra::Form.new(app, nil, '/foo')
-        form.i18n_name(:bar).should == "bar"
+        expect(form.i18n_name(:bar)).to eq "bar"
       end
 
     end
@@ -76,19 +76,19 @@ describe Sequent::Web::Sinatra::FormHelpers, no_database: true do
 
     it "should correctly create a field within a fieldset" do
       f = Sequent::Web::Sinatra::Fieldset.new(app, :foo, {}, {})
-      f.calculate_name(:bar).should == "foo[bar]"
-      f.calculate_name("bar").should == "foo[bar]"
-      f.calculate_id("bar").should == "foo_bar"
+      expect(f.calculate_name(:bar)).to eq "foo[bar]"
+      expect(f.calculate_name("bar")).to eq "foo[bar]"
+      expect(f.calculate_id("bar")).to eq "foo_bar"
     end
 
     it "should correctly create a field within a nested fieldset" do
       f = Sequent::Web::Sinatra::Fieldset.new(app, :foo, {}, {})
 
       f.nested("bar") do |nested|
-        nested.calculate_name("foobar").should == "foo[bar][foobar]"
+        expect(nested.calculate_name("foobar")).to eq "foo[bar][foobar]"
         nested.nested(:super_nested) do |super_nested|
-          super_nested.calculate_name("foo").should == "foo[bar][super_nested][foo]"
-          super_nested.calculate_id("foo").should == "foo_bar_super_nested_foo"
+          expect(super_nested.calculate_name("foo")).to eq "foo[bar][super_nested][foo]"
+          expect(super_nested.calculate_id("foo")).to eq "foo_bar_super_nested_foo"
         end
       end
     end
@@ -97,25 +97,25 @@ describe Sequent::Web::Sinatra::FormHelpers, no_database: true do
       it "should create a checkbox" do
         f = Sequent::Web::Sinatra::Fieldset.new(app, :foo, {}, {})
         tag = f.raw_checkbox("checkit")
-        tag.should == %Q{<input id="foo_checkit" name="foo[checkit]" type="checkbox" value="foo_checkit" />}
+        expect(tag).to eq %Q{<input id="foo_checkit" name="foo[checkit]" type="checkbox" value="foo_checkit" />}
       end
 
       it "should create a checkbox with arbitrary data" do
         f = Sequent::Web::Sinatra::Fieldset.new(app, :foo, {}, {})
         tag = f.raw_checkbox("checkit", :"data-foo" => "bar")
-        tag.should == %Q{<input data-foo="bar" id="foo_checkit" name="foo[checkit]" type="checkbox" value="foo_checkit" />}
+        expect(tag).to eq %Q{<input data-foo="bar" id="foo_checkit" name="foo[checkit]" type="checkbox" value="foo_checkit" />}
       end
 
       it "should take over the given value if any" do
         f = Sequent::Web::Sinatra::Fieldset.new(app, :foo, {}, {})
         tag = f.raw_checkbox("checkit", value: "42")
-        tag.should == %Q{<input id="foo_checkit" name="foo[checkit]" type="checkbox" value="42" />}
+        expect(tag).to eq %Q{<input id="foo_checkit" name="foo[checkit]" type="checkbox" value="42" />}
       end
 
       it "should check the checkbox if the value is in the params" do
         f = Sequent::Web::Sinatra::Fieldset.new(app, "foo", {"foo" => {"checkit" => "42"}}, {})
         tag = f.raw_checkbox("checkit", value: "42")
-        tag.should == %Q{<input checked="checked" id="foo_checkit" name="foo[checkit]" type="checkbox" value="42" />}
+        expect(tag).to eq %Q{<input checked="checked" id="foo_checkit" name="foo[checkit]" type="checkbox" value="42" />}
       end
     end
 
