@@ -1,3 +1,5 @@
+# Sequent-Sinatra
+
 [![Build Status](https://travis-ci.org/zilverline/sequent-sinatra.svg?branch=master)](https://travis-ci.org/zilverline/sequent-sinatra) [![Code Climate](https://codeclimate.com/github/zilverline/sequent-sinatra/badges/gpa.svg)](https://codeclimate.com/github/zilverline/sequent-sinatra) [![Test Coverage](https://codeclimate.com/github/zilverline/sequent-sinatra/badges/coverage.svg)](https://codeclimate.com/github/zilverline/sequent-sinatra)
 
 ## Getting started
