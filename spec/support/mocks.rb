@@ -1,6 +1,6 @@
 class MockAppForFormHelper < Sinatra::Base
-  include Sequent::Web::Sinatra::FormHelpers,
-    Sequent::Web::Sinatra::TagHelper
+  include Sequent::Web::Sinatra::FormHelpers
+  include Sequent::Web::Sinatra::TagHelper
 
   def initialize
     super
