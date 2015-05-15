@@ -24,7 +24,7 @@ module Sequent
 
           app.before do
             require File.join(app.sequent_config_dir || app.root, 'initializers/sequent')
-            @command_service = Sequent::Core::CommandService.instance
+            @command_service = Sequent.command_service
           end
 
         end
