@@ -22,6 +22,42 @@ describe Sequent::Web::Sinatra::Fieldset do
     end
   end
 
+  describe 'arrays' do
+    it 'handles arrays' do
+      f = Sequent::Web::Sinatra::Fieldset.new(app, :foo, { foo: { bar: [] } }, {})
+      f.nested_array(:bar) do |nested|
+        expect(nested.calculate_name('foobar')).to eq 'foo[bar][][foobar]'
+      end
+    end
+
+    it 'handles deeply nested arrays' do
+      f = Sequent::Web::Sinatra::Fieldset.new(app, :foo, {}, {})
+      f.nested_array(:bar) do |nested1|
+        nested1.nested(:baz) do |nested2|
+          nested2.nested_array(:boop) do |nested3|
+            expect(nested3.calculate_name('beboop')).to eq 'foo[bar][][baz][boop][][beboop]'
+          end
+        end
+      end
+    end
+
+    it 'extracts values' do
+      f = Sequent::Web::Sinatra::Fieldset.new(app, 'foo', { 'foo' => { 'bar' => [{ 'baz' => 'one' }, { 'baz' => 'two' }] } }, {})
+      values = []
+      f.nested_array('bar') do |nested1|
+        values << nested1.param_or_default('baz', '')
+      end
+      expect(values).to eq ['one', 'two']
+    end
+
+    it "doesn't crash" do
+      f = Sequent::Web::Sinatra::Fieldset.new(app, :foo, {}, {})
+      f.nested_array(:bar) do |nested|
+        expect(nested.calculate_name('foobar')).to eq 'foo[bar][][foobar]'
+      end
+    end
+  end
+
   describe "checkboxes" do
     it "should create a checkbox" do
       f = Sequent::Web::Sinatra::Fieldset.new(app, :foo, {}, {})

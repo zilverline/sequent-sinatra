@@ -7,6 +7,10 @@ class MockAppForFormHelper < Sinatra::Base
     @_out_buf = ""
   end
 
+  def postfix
+    ""
+  end
+
   def csrf_tag
     "<p>CSRF</p>"
   end
