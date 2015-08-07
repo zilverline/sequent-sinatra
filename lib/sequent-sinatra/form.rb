@@ -43,7 +43,6 @@ module Sequent
           out << '</form>'
           buf = @context.instance_variable_get("@_out_buf")
           buf << out
-
         end
 
         def fieldset(obj_name, options = {}, &block)
@@ -62,8 +61,7 @@ module Sequent
         def erb_with_output_buffer(buf = '')
           old_buffer = @context.instance_variable_get("@_out_buf")
           @context.instance_variable_set "@_out_buf", buf
-          yield
-          @context.instance_variable_get("@_out_buf")
+          yield || @context.instance_variable_get("@_out_buf")
         ensure
           @context.instance_variable_set "@_out_buf", old_buffer
         end
