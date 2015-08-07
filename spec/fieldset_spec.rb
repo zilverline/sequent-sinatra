@@ -50,7 +50,7 @@ describe Sequent::Web::Sinatra::Fieldset do
       expect(values).to eq ['one', 'two']
     end
 
-    it "doesn't crash" do
+    it "calculates the name with empty params" do
       f = Sequent::Web::Sinatra::Fieldset.new(app, :foo, {}, {})
       f.nested_array(:bar) do |nested|
         expect(nested.calculate_name('foobar')).to eq 'foo[bar][][foobar]'
