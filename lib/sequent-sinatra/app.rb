@@ -21,10 +21,13 @@ module Sequent
           app.helpers Sequent::Core::Helpers::UuidHelper
           app.helpers Sequent::Web::Sinatra::FormHelpers
           app.helpers Sequent::Web::Sinatra::SimpleCommandServiceHelpers
+          app.set :sequent_config_dir, app.root unless app.respond_to?(:sequent_config_dir)
 
           app.before do
-            require File.join(app.sequent_config_dir || app.root, 'initializers/sequent')
-            @command_service = Sequent::Core::CommandService.instance
+            sequent_config_file = File.join(app.sequent_config_dir, 'initializers/sequent')
+            require sequent_config_file if File.exists?(sequent_config_file)
+
+            @command_service = Sequent.command_service
           end
 
         end
