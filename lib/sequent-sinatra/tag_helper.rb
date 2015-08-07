@@ -1,7 +1,18 @@
 module Sequent
   module Web
     module Sinatra
+      ##
+      # Exposes various helper methods for creating form tags
+      #
       module TagHelper
+        ##
+        # creates a <input type=checkbox>
+        #
+        # Parameters
+        #   +field+ the name of the attribute within the current object.
+        #   +options+ Hash with optional attributes.
+        #               :value - the default checked value if the current object has none
+        #               :class - the css class
         def raw_checkbox(field, options={})
           id = css_id(@path, field)
           value = param_or_default(field, options[:value]) || id
@@ -13,14 +24,39 @@ module Sequent
                            )
         end
 
+        ##
+        # Creates a <input type=text>
+        #
+        # Parameters
+        #   +field+ the name of the attribute within the current object.
+        #   +options+ Hash with optional attributes.
+        #               :value - the default value if the current object has none
+        #               :class - the css class
         def raw_input(field, options={})
           raw_field(field, "text", options)
         end
 
+        ##
+        # Creates a <input type=password>
+        #
+        # Parameters
+        #   +field+ the name of the attribute within the current object.
+        #   +options+ Hash with optional attributes.
+        #               :value - the default value if the current object has none
+        #               :class - the css class
         def raw_password(field, options={})
           raw_field(field, "password", options)
         end
 
+        ##
+        # Creates a <textarea>
+        #
+        # Parameters
+        #   +field+ the name of the attribute within the current object.
+        #   +options+ Hash with optional attributes.
+        #               :value - the default value if the current object has none
+        #               :class - the css class
+        #               :rows - the number of rows of the textarea
         def raw_textarea(field, options={})
           value = param_or_default(field, options[:value])
 
@@ -30,10 +66,27 @@ module Sequent
                                                                ))
         end
 
+        ##
+        # Creates a <input type=hidden>
+        #
+        # Parameters
+        #   +field+ the name of the attribute within the current object.
+        #   +options+ Hash with optional attributes.
+        #               :value - the default value if the current object has none
+        #               :class - the css class
         def raw_hidden(field, options={})
           raw_field(field, "hidden", options)
         end
 
+        ##
+        # Creates a <select> with <option>
+        #
+        # Parameters
+        #   +field+ the name of the attribute within the current object.
+        #   +values+ an array of pairs (arrays) of [value, text_to_display]
+        #   +options+ Hash with optional attributes.
+        #               :value - the default value if the current object has none
+        #               :class - the css class
         def raw_select(field, values, options={})
           value = param_or_default(field, options[:value])
           content = ""

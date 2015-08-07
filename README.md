@@ -81,6 +81,8 @@ class SignupCommand < Sequent::Core::Command
 end
 ```
 
+You can use the form helpers as follows
+
 ```erb
 <% html_form_for(@command, "/", :post) do |form| %>
   <% form.fieldset(@command.class.to_s.underscore.to_sym) do |f| %>
