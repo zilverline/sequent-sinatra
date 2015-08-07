@@ -22,5 +22,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec-collection_matchers', '~> 1.1'
   s.add_development_dependency 'rspec-html-matchers', '~> 0.7'
   s.add_development_dependency 'simplecov', '~> 0.9'
-  s.add_development_dependency  'rake', '~> 10.4'
+  s.add_development_dependency 'rake', '~> 10.4'
+  s.add_development_dependency 'pry', '~> 0.10'
 end

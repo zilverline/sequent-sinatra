@@ -49,7 +49,7 @@ module Sequent
 
         def calculate_name(field)
           reverse_names = tree_in_names(field)
-          "#{reverse_names.first}#{reverse_names[1..-1].map { |n| "[#{n}]" }.join}"
+          "#{reverse_names.first}#{reverse_names[1..-1].map { |n| n == '[]' ? n : "[#{n}]" }.join}"
         end
 
         def full_path(field)
@@ -60,9 +60,10 @@ module Sequent
 
         def tree_in_names(field)
           if respond_to? :path
-            names = [field, path]
+            names = [field, postfix, path].compact
             parent = @parent
             while parent.is_a? Fieldset
+              names << parent.postfix if parent.postfix
               names << parent.path
               parent = parent.parent
             end
@@ -75,7 +76,6 @@ module Sequent
         def param_or_default(field, default)
           @values.nil? ? default : @values.has_key?(field.to_s) ? @values[field.to_s] || default : default
         end
-
 
         def id_and_text_from_value(val)
           if val.is_a? Array

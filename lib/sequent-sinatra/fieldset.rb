@@ -9,13 +9,23 @@ module Sequent
 
         attr_reader :path, :parent
 
+        def postfix
+          nil
+        end
+
         def initialize(parent, path, params, errors, options = {})
           raise "params are empty while creating new fieldset path #{path}" unless params
-          @values = params.has_key?(path) ? (params[path] || {}) : {}
+          @values = params[path] || {}
           @parent = parent
           @path = path.to_s.gsub(/\W+/, '')
           @errors = errors
           @options = options
+        end
+
+        def nested_array(name)
+          (@values[name] || [{}]).each do |value|
+            yield FieldsetInArray.new(self, name, { name => value }, @errors, @options)
+          end
         end
 
         def nested(name)
@@ -29,9 +39,13 @@ module Sequent
         def path_for(field_name)
           css_id @path, field_name
         end
-
       end
 
+      class FieldsetInArray < Fieldset
+        def postfix
+          "[]"
+        end
+      end
     end
   end
 end
