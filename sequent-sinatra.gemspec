@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
   s.add_dependency             'sequent', '~> 0.1'
   s.add_dependency             'sinatra', '~> 1.4'
   s.add_dependency             'rack_csrf', '~> 2.5'
+  s.add_development_dependency 'rack-test', '~> 0.6'
   s.add_development_dependency 'rspec', '~> 3.2'
   s.add_development_dependency 'rspec-mocks', '~> 3.2'
   s.add_development_dependency 'rspec-collection_matchers', '~> 1.1'
