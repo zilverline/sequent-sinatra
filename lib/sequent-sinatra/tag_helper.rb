@@ -101,30 +101,15 @@ module Sequent
         end
 
         def calculate_name(field)
-          reverse_names = tree_in_names(field)
+          reverse_names = tree_in_names(field, :postfix)
           "#{reverse_names.first}#{reverse_names[1..-1].map { |n| n == '[]' ? n : "[#{n}]" }.join}"
         end
 
         def full_path(field)
-          tree_in_names(field).join('_')
+          tree_in_names(field, :postfix_for_id).join('_')
         end
 
         alias_method :calculate_id, :full_path
-
-        def tree_in_names(field)
-          if respond_to? :path
-            names = [field, postfix, path].compact
-            parent = @parent
-            while parent.is_a? Fieldset
-              names << parent.postfix if parent.postfix
-              names << parent.path
-              parent = parent.parent
-            end
-            names.reverse
-          else
-            [field]
-          end
-        end
 
         def param_or_default(field, default)
           @values.nil? ? default : @values.has_key?(field.to_s) ? @values[field.to_s] || default : default
@@ -191,6 +176,7 @@ module Sequent
             value = self.send(options[:formatter], value)
             options.delete(:formatter)
           end
+          #TODO use calculate_id
           id = options[:id] || css_id(@path, field)
           single_tag :input, options.merge(
                              :type => field_type,
@@ -199,6 +185,23 @@ module Sequent
                              :value => value
                            )
         end
+
+        def tree_in_names(field, postfix_method_name)
+          if respond_to? :path
+            names = [field, send(postfix_method_name), path].compact
+            parent = @parent
+            while parent.is_a? Fieldset
+              names << parent.postfix if parent.send(postfix_method_name)
+              names << parent.path
+              parent = parent.parent
+            end
+            names.reverse
+          else
+            [field]
+          end
+        end
+
+
 
 
       end

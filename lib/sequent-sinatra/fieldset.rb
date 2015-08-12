@@ -13,6 +13,10 @@ module Sequent
           nil
         end
 
+        def postfix_for_id
+          nil
+        end
+
         def initialize(parent, path, params, errors, options = {})
           raise "params are empty while creating new fieldset path #{path}" unless params
           @values = params[path] || {}
@@ -22,9 +26,10 @@ module Sequent
           @options = options
         end
 
-        def nested_array(name)
-          (@values[name] || [{}]).each do |value|
-            yield FieldsetInArray.new(self, name, { name => value }, @errors, @options)
+        def nested_array(name, default_if_empty = {})
+          values = @values[name].present? ? @values[name] : [default_if_empty].compact
+          values.each_with_index do |value, index|
+            yield FieldsetInArray.new(self, name, { name => value }, @errors, @options.merge(index_in_array: index))
           end
         end
 
@@ -44,6 +49,10 @@ module Sequent
       class FieldsetInArray < Fieldset
         def postfix
           "[]"
+        end
+
+        def postfix_for_id
+          @options[:index_in_array].to_s
         end
       end
     end
