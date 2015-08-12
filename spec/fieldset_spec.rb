@@ -27,6 +27,7 @@ describe Sequent::Web::Sinatra::Fieldset do
       f = Sequent::Web::Sinatra::Fieldset.new(app, :foo, { foo: { bar: [] } }, {})
       f.nested_array(:bar) do |nested|
         expect(nested.calculate_name('foobar')).to eq 'foo[bar][][foobar]'
+        expect(nested.calculate_id('foobar')).to eq 'foo_bar_0_foobar'
       end
     end
 
