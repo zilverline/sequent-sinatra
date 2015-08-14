@@ -14,11 +14,12 @@ module Sequent
         #               :value - the default checked value if the current object has none
         #               :class - the css class
         def raw_checkbox(field, options={})
-          id = css_id(@path, field)
+          id = calculate_id(field)
           value = param_or_default(field, options[:value]) || id
           values = [value].compact
           single_tag :input, options.merge(
-                             :type => "checkbox", :id => id,
+                             :type => "checkbox",
+                             :id => id,
                              :name => calculate_name(field),
                              :value => value, checked: (values.include?(@values[field.to_s])) ? "checked" : nil
                            )
@@ -61,7 +62,7 @@ module Sequent
           value = param_or_default(field, options[:value])
 
           with_closing_tag :textarea, value, {rows: "3"}.merge(options.merge(
-                                                                 :id => css_id(@path, field),
+                                                                 :id => calculate_id(field),
                                                                  :name => calculate_name(field)
                                                                ))
         end
@@ -97,7 +98,7 @@ module Sequent
             option_values.merge!(disabled: "disabled") if options[:disable].try(:include?, id)
             content << tag(:option, text, option_values)
           end
-          tag :select, content, options.merge(:id => css_id(@path, field), :name => calculate_name(field))
+          tag :select, content, options.merge(id: calculate_id(field), name: calculate_name(field))
         end
 
         def full_path(field)
@@ -109,10 +110,6 @@ module Sequent
         def calculate_name(field)
           reverse_names = tree_in_names(field, :postfix)
           "#{reverse_names.first}#{reverse_names[1..-1].map { |n| n == '[]' ? n : "[#{n}]" }.join}"
-        end
-
-        def css_id(*things)
-          things.compact.map { |t| t.to_s }.join('_').downcase.gsub(/\W/, '_')
         end
 
         def param_or_default(field, default)
@@ -171,7 +168,7 @@ module Sequent
             options.delete(:formatter)
           end
           #TODO use calculate_id
-          id = options[:id] || css_id(@path, field)
+          id = options[:id] || calculate_id(field)
           single_tag :input, options.merge(
                              :type => field_type,
                              :id => id,
