@@ -17,10 +17,6 @@ module Sequent
           @options = options
         end
 
-        def path_for(field_name)
-          css_id field_name
-        end
-
         def method_missing(method, *args, &block)
           @context.send(method, *args)
         end

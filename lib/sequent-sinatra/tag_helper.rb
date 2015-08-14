@@ -14,11 +14,12 @@ module Sequent
         #               :value - the default checked value if the current object has none
         #               :class - the css class
         def raw_checkbox(field, options={})
-          id = css_id(@path, field)
+          id = calculate_id(field)
           value = param_or_default(field, options[:value]) || id
           values = [value].compact
           single_tag :input, options.merge(
-                             :type => "checkbox", :id => id,
+                             :type => "checkbox",
+                             :id => id,
                              :name => calculate_name(field),
                              :value => value, checked: (values.include?(@values[field.to_s])) ? "checked" : nil
                            )
@@ -56,12 +57,12 @@ module Sequent
         #   +options+ Hash with optional attributes.
         #               :value - the default value if the current object has none
         #               :class - the css class
-        #               :rows - the number of rows of the textarea
+        #               :rows - the number of rows of the textarea, default 3
         def raw_textarea(field, options={})
           value = param_or_default(field, options[:value])
 
           with_closing_tag :textarea, value, {rows: "3"}.merge(options.merge(
-                                                                 :id => css_id(@path, field),
+                                                                 :id => calculate_id(field),
                                                                  :name => calculate_name(field)
                                                                ))
         end
@@ -97,12 +98,7 @@ module Sequent
             option_values.merge!(disabled: "disabled") if options[:disable].try(:include?, id)
             content << tag(:option, text, option_values)
           end
-          tag :select, content, options.merge(:id => css_id(@path, field), :name => calculate_name(field))
-        end
-
-        def calculate_name(field)
-          reverse_names = tree_in_names(field, :postfix)
-          "#{reverse_names.first}#{reverse_names[1..-1].map { |n| n == '[]' ? n : "[#{n}]" }.join}"
+          tag :select, content, options.merge(id: calculate_id(field), name: calculate_name(field))
         end
 
         def full_path(field)
@@ -111,44 +107,13 @@ module Sequent
 
         alias_method :calculate_id, :full_path
 
+        def calculate_name(field)
+          reverse_names = tree_in_names(field, :postfix)
+          "#{reverse_names.first}#{reverse_names[1..-1].map { |n| n == '[]' ? n : "[#{n}]" }.join}"
+        end
+
         def param_or_default(field, default)
           @values.nil? ? default : @values.has_key?(field.to_s) ? @values[field.to_s] || default : default
-        end
-
-        def id_and_text_from_value(val)
-          if val.is_a? Array
-            [val[0], val[1]]
-          else
-            [val, val]
-          end
-        end
-
-        def css_id(*things)
-          things.compact.map { |t| t.to_s }.join('_').downcase.gsub(/\W/, '_')
-        end
-
-        def tag(name, content, options={})
-          "<#{name.to_s}" +
-            (options.length > 0 ? " #{hash_to_html_attrs(options)}" : '') +
-            (content.nil? ? '>' : ">#{content}</#{name}>")
-        end
-
-        def single_tag(name, options={})
-          "<#{name.to_s} #{hash_to_html_attrs(options)} />"
-        end
-
-        def with_closing_tag(name, value, options={})
-          %Q{<#{name.to_s} #{hash_to_html_attrs(options)} >#{h value}</#{name.to_s}>}
-        end
-
-        def hash_to_html_attrs(options={})
-          raise %Q{Keys used in options must be a Symbol. Don't use {"class" => "col-md-4"} but use {class: "col-md-4"}} if options.keys.find { |k| not k.kind_of? Symbol }
-          html_attrs = ""
-          options.keys.sort.each do |key|
-            next if options[key].nil? # do not include empty attributes
-            html_attrs << %Q(#{key}="#{h(options[key])}" )
-          end
-          html_attrs.chop
         end
 
         def merge_and_append_class_attributes(to_append, options = {})
@@ -170,6 +135,32 @@ module Sequent
         end
 
         private
+
+        def id_and_text_from_value(val)
+          if val.is_a? Array
+            [val[0], val[1]]
+          else
+            [val, val]
+          end
+        end
+
+        def tag(name, content, options={})
+          "<#{name.to_s}" +
+            (options.length > 0 ? " #{hash_to_html_attrs(options)}" : '') +
+            (content.nil? ? '>' : ">#{content}</#{name}>")
+        end
+
+        def hash_to_html_attrs(options={})
+          raise %Q{Keys used in options must be a Symbol. Don't use {"class" => "col-md-4"} but use {class: "col-md-4"}} if options.keys.find { |k| not k.kind_of? Symbol }
+          html_attrs = ""
+          options.keys.sort.each do |key|
+            next if options[key].nil? # do not include empty attributes
+            html_attrs << %Q(#{key}="#{h(options[key])}" )
+          end
+          html_attrs.chop
+        end
+
+
         def raw_field(field, field_type, options)
           value = param_or_default(field, options[:value])
           if options[:formatter]
@@ -177,7 +168,7 @@ module Sequent
             options.delete(:formatter)
           end
           #TODO use calculate_id
-          id = options[:id] || css_id(@path, field)
+          id = options[:id] || calculate_id(field)
           single_tag :input, options.merge(
                              :type => field_type,
                              :id => id,
@@ -201,8 +192,13 @@ module Sequent
           end
         end
 
+        def single_tag(name, options={})
+          "<#{name.to_s} #{hash_to_html_attrs(options)} />"
+        end
 
-
+        def with_closing_tag(name, value, options={})
+          %Q{<#{name.to_s} #{hash_to_html_attrs(options)} >#{h value}</#{name.to_s}>}
+        end
 
       end
     end

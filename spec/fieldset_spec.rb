@@ -28,6 +28,8 @@ describe Sequent::Web::Sinatra::Fieldset do
       f.nested_array(:bar) do |nested|
         expect(nested.calculate_name('foobar')).to eq 'foo[bar][][foobar]'
         expect(nested.calculate_id('foobar')).to eq 'foo_bar_0_foobar'
+        tag = nested.raw_input(:foobar)
+        expect(tag).to eq %Q{<input id="foo_bar_0_foobar" name="foo[bar][][foobar]" type="text" />}
       end
     end
 
