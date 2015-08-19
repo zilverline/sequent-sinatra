@@ -14,7 +14,7 @@ module Sequent
         #               :value - the default checked value if the current object has none
         #               :class - the css class
         def raw_checkbox(field, options={})
-          id = calculate_id(field)
+          id = options[:id] || calculate_id(field)
           value = param_or_default(field, options[:value]) || id
           values = [value].compact
           single_tag :input, options.merge(
@@ -59,10 +59,10 @@ module Sequent
         #               :class - the css class
         #               :rows - the number of rows of the textarea, default 3
         def raw_textarea(field, options={})
-          value = param_or_default(field, options[:value])
-
+          value = param_or_default(field, options.delete(:value))
+          id = options[:id] || calculate_id(field)
           with_closing_tag :textarea, value, {rows: "3"}.merge(options.merge(
-                                                                 :id => calculate_id(field),
+                                                                 :id => id,
                                                                  :name => calculate_name(field)
                                                                ))
         end
@@ -91,6 +91,7 @@ module Sequent
         def raw_select(field, values, options={})
           value = param_or_default(field, options[:value])
           content = ""
+          css_id = options[:id] || calculate_id(field)
           Array(values).each do |val|
             id, text = id_and_text_from_value(val)
             option_values = {value: id}
@@ -98,7 +99,7 @@ module Sequent
             option_values.merge!(disabled: "disabled") if options[:disable].try(:include?, id)
             content << tag(:option, text, option_values)
           end
-          tag :select, content, options.merge(id: calculate_id(field), name: calculate_name(field))
+          tag :select, content, options.merge(id: css_id, name: calculate_name(field))
         end
 
         def full_path(field)
