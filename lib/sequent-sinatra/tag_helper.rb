@@ -102,6 +102,31 @@ module Sequent
           tag :select, content, options.merge(id: css_id, name: calculate_name(field))
         end
 
+        ##
+        # creates a <input type=radio>
+        #
+        # By default it will check the radio button who's value is present in the backing object
+        #
+        # Parameters
+        #   +field+ the name of the attribute within the current object.
+        #   +options+ Hash with optional attributes.
+        #               :value - the value of the radio option
+        #               :checked - does this radio need to be checked
+        #               :class - the css class
+        def raw_radio(field, options = {})
+          id = options[:id] || calculate_id(field)
+          value = param_or_default(field, options[:value])
+          raise "radio buttons need a value" unless value
+          values = [value].compact
+          checked = values.include?(@values[field.to_s]) || options.include?(:checked)
+          single_tag :input, options.merge(
+                             :type => "radio",
+                             :id => id,
+                             :name => calculate_name(field),
+                             :value => value, checked: checked ? "checked" : nil
+                           )
+        end
+
         def full_path(field)
           tree_in_names(field, :postfix_for_id).join('_')
         end
