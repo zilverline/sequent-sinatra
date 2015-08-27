@@ -114,16 +114,17 @@ module Sequent
         #               :checked - does this radio need to be checked
         #               :class - the css class
         def raw_radio(field, options = {})
+          raise "radio buttons need a value" unless options[:value]
           id = options[:id] || calculate_id(field)
           value = param_or_default(field, options[:value])
-          raise "radio buttons need a value" unless value
           values = [value].compact
           checked = values.include?(@values[field.to_s]) || options.include?(:checked)
           single_tag :input, options.merge(
                              :type => "radio",
                              :id => id,
                              :name => calculate_name(field),
-                             :value => value, checked: checked ? "checked" : nil
+                             :value => options[:value],
+                             checked: checked ? "checked" : nil
                            )
         end
 
