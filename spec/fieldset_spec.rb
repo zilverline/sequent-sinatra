@@ -217,4 +217,31 @@ describe Sequent::Web::Sinatra::Fieldset do
       end
     end
   end
+
+  describe ".raw_radio" do
+    let(:fieldset) { Sequent::Web::Sinatra::Fieldset.new(app, :foo, {}, {}) }
+
+    it "fails without been given a value" do
+      expect{fieldset.raw_radio("field")}.to raise_exception /radio buttons need a value/
+    end
+
+    it "can create a radio button" do
+      tag = fieldset.raw_radio("field", value: "Option 1")
+      expect(tag).to eq %Q{<input id="foo_field" name="foo[field]" type="radio" value="Option 1" />}
+    end
+
+    it "can manually check a radio button" do
+      tag = fieldset.raw_radio("field", value: "Option 1", checked: "checked")
+      expect(tag).to eq %Q{<input checked="checked" id="foo_field" name="foo[field]" type="radio" value="Option 1" />}
+    end
+
+    context "with value" do
+      let(:fieldset) { Sequent::Web::Sinatra::Fieldset.new(app, "foo", {"foo" => {"field" => "Option 2"}}, {}) }
+      it "uses the given value" do
+        tag = fieldset.raw_radio("field", value: "Option 1")
+        expect(tag).to eq %Q{<input id="foo_field" name="foo[field]" type="radio" value="Option 1" />}
+      end
+    end
+
+  end
 end

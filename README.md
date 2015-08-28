@@ -110,6 +110,7 @@ Various for helpers exist
 * `raw_textarea`
 * `raw_hidden`
 * `raw_select`
+* `raw_radio`
 
 You can provide the following parameters to these helper methods
 
