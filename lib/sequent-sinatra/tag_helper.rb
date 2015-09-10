@@ -17,11 +17,14 @@ module Sequent
           id = options[:id] || calculate_id(field)
           value = param_or_default(field, options[:value]) || id
           values = [value].compact
+          field_value = param_or_default(field, false)
+          checked = options.has_key?(:checked) ? options[:checked] : values.include?(field_value)
+          checked = checked ? "checked" : nil
           single_tag :input, options.merge(
                              :type => "checkbox",
                              :id => id,
                              :name => calculate_name(field),
-                             :value => value, checked: (values.include?(@values[field.to_s])) ? "checked" : nil
+                             :value => value, checked: checked
                            )
         end
 
