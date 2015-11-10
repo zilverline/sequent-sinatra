@@ -15,7 +15,7 @@ module Sequent
         #               :class - the css class
         def raw_checkbox(field, options={})
           id = options[:id] || calculate_id(field)
-          value = param_or_default(field, options[:default], options) || id
+          value = param_or_default(field, options.delete(:default), options) || id
           values = [value].compact
           field_value = param_or_default(field, false)
           checked = options.has_key?(:checked) ? options[:checked] : values.include?(field_value)
@@ -92,7 +92,7 @@ module Sequent
         #               :default - the default value if the current object has none
         #               :class - the css class
         def raw_select(field, values, options={})
-          value = param_or_default(field, options[:default], options)
+          value = param_or_default(field, options.delete(:default), options)
           content = ""
           css_id = options[:id] || calculate_id(field)
           Array(values).each do |val|
@@ -119,7 +119,7 @@ module Sequent
         def raw_radio(field, options = {})
           raise "radio buttons need a value" unless options[:default]
           id = options[:id] || calculate_id(field)
-          value = options[:default]
+          value = options.delete(:default)
           checked = (value == @values[field.to_s] || options.include?(:checked))
           single_tag :input, options.merge(
                              :type => "radio",
@@ -192,7 +192,7 @@ module Sequent
 
 
         def raw_field(field, field_type, options)
-          value = param_or_default(field, options[:default], options)
+          value = param_or_default(field, options.delete(:default), options)
           if options[:formatter]
             value = self.send(options[:formatter], value)
             options.delete(:formatter)

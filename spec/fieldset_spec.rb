@@ -80,19 +80,19 @@ describe Sequent::Web::Sinatra::Fieldset do
     end
 
     it "should take over the given value if any" do
-      tag = fieldset.raw_checkbox("checkit", value: "42")
+      tag = fieldset.raw_checkbox("checkit", default: "42")
       expect(tag).to eq %Q{<input id="foo_checkit" name="foo[checkit]" type="checkbox" value="42" />}
     end
 
     context "with value" do
       let(:fieldset) { Sequent::Web::Sinatra::Fieldset.new(app, "foo", {"foo" => {"checkit" => "42"}}, {}) }
       it "should check the checkbox if the value is in the params" do
-        tag = fieldset.raw_checkbox("checkit", value: "42")
+        tag = fieldset.raw_checkbox("checkit", default: "42")
         expect(tag).to eq %Q{<input checked="checked" id="foo_checkit" name="foo[checkit]" type="checkbox" value="42" />}
       end
     end
   end
-  
+
   describe ".raw_input" do
     let(:fieldset) { Sequent::Web::Sinatra::Fieldset.new(app, :foo, {}, {}) }
     it "should create a checkbox" do
@@ -106,7 +106,7 @@ describe Sequent::Web::Sinatra::Fieldset do
     end
 
     it "uses the given value if any" do
-      tag = fieldset.raw_input("field", {value: "42"})
+      tag = fieldset.raw_input("field", {default: "42"})
       expect(tag).to eq %Q{<input id="foo_field" name="foo[field]" type="text" value="42" />}
     end
 
@@ -118,7 +118,7 @@ describe Sequent::Web::Sinatra::Fieldset do
       end
     end
   end
-  
+
   describe ".raw_password" do
     let(:fieldset) { Sequent::Web::Sinatra::Fieldset.new(app, :foo, {}, {}) }
     it "should create a checkbox" do
@@ -132,7 +132,7 @@ describe Sequent::Web::Sinatra::Fieldset do
     end
 
     it "uses the given value if any" do
-      tag = fieldset.raw_password("pwd_field", {value: "42"})
+      tag = fieldset.raw_password("pwd_field", {default: "42"})
       expect(tag).to eq %Q{<input id="foo_pwd_field" name="foo[pwd_field]" type="password" value="42" />}
     end
 
@@ -144,7 +144,7 @@ describe Sequent::Web::Sinatra::Fieldset do
       end
     end
   end
-  
+
   describe ".raw_textarea" do
     let(:fieldset) { Sequent::Web::Sinatra::Fieldset.new(app, :foo, {}, {}) }
     it "should create a checkbox" do
@@ -158,7 +158,7 @@ describe Sequent::Web::Sinatra::Fieldset do
     end
 
     it "uses the given value if any" do
-      tag = fieldset.raw_textarea("field", {value: "42"})
+      tag = fieldset.raw_textarea("field", {default: "42"})
       expect(tag).to eq %Q{<textarea id="foo_field" name="foo[field]" rows="3" >42</textarea>}
     end
 
@@ -170,7 +170,7 @@ describe Sequent::Web::Sinatra::Fieldset do
       end
     end
   end
-  
+
   describe ".raw_hidden" do
     let(:fieldset) { Sequent::Web::Sinatra::Fieldset.new(app, :foo, {}, {}) }
     it "should create a checkbox" do
@@ -184,7 +184,7 @@ describe Sequent::Web::Sinatra::Fieldset do
     end
 
     it "uses the given value if any" do
-      tag = fieldset.raw_hidden("field", {value: "42"})
+      tag = fieldset.raw_hidden("field", {default: "42"})
       expect(tag).to eq %Q{<input id="foo_field" name="foo[field]" type="hidden" value="42" />}
     end
 
@@ -226,19 +226,19 @@ describe Sequent::Web::Sinatra::Fieldset do
     end
 
     it "can create a radio button" do
-      tag = fieldset.raw_radio("field", value: "Option 1")
+      tag = fieldset.raw_radio("field", default: "Option 1")
       expect(tag).to eq %Q{<input id="foo_field" name="foo[field]" type="radio" value="Option 1" />}
     end
 
     it "can manually check a radio button" do
-      tag = fieldset.raw_radio("field", value: "Option 1", checked: "checked")
+      tag = fieldset.raw_radio("field", default: "Option 1", checked: "checked")
       expect(tag).to eq %Q{<input checked="checked" id="foo_field" name="foo[field]" type="radio" value="Option 1" />}
     end
 
     context "with value" do
       let(:fieldset) { Sequent::Web::Sinatra::Fieldset.new(app, "foo", {"foo" => {"field" => "Option 2"}}, {}) }
       it "uses the given value" do
-        tag = fieldset.raw_radio("field", value: "Option 1")
+        tag = fieldset.raw_radio("field", default: "Option 1")
         expect(tag).to eq %Q{<input id="foo_field" name="foo[field]" type="radio" value="Option 1" />}
       end
     end
