@@ -11,11 +11,11 @@ module Sequent
         # Parameters
         #   +field+ the name of the attribute within the current object.
         #   +options+ Hash with optional attributes.
-        #               :value - the default checked value if the current object has none
+        #               :default - the default checked value if the current object has none
         #               :class - the css class
         def raw_checkbox(field, options={})
           id = options[:id] || calculate_id(field)
-          value = param_or_default(field, options[:value]) || id
+          value = param_or_default(field, options[:default], options) || id
           values = [value].compact
           field_value = param_or_default(field, false)
           checked = options.has_key?(:checked) ? options[:checked] : values.include?(field_value)
@@ -34,7 +34,7 @@ module Sequent
         # Parameters
         #   +field+ the name of the attribute within the current object.
         #   +options+ Hash with optional attributes.
-        #               :value - the default value if the current object has none
+        #               :default - the default value if the current object has none
         #               :class - the css class
         def raw_input(field, options={})
           raw_field(field, "text", options)
@@ -46,7 +46,7 @@ module Sequent
         # Parameters
         #   +field+ the name of the attribute within the current object.
         #   +options+ Hash with optional attributes.
-        #               :value - the default value if the current object has none
+        #               :default - the default value if the current object has none
         #               :class - the css class
         def raw_password(field, options={})
           raw_field(field, "password", options)
@@ -58,11 +58,11 @@ module Sequent
         # Parameters
         #   +field+ the name of the attribute within the current object.
         #   +options+ Hash with optional attributes.
-        #               :value - the default value if the current object has none
+        #               :default - the default value if the current object has none
         #               :class - the css class
         #               :rows - the number of rows of the textarea, default 3
         def raw_textarea(field, options={})
-          value = param_or_default(field, options.delete(:value))
+          value = param_or_default(field, options.delete(:default), options)
           id = options[:id] || calculate_id(field)
           with_closing_tag :textarea, value, {rows: "3"}.merge(options.merge(
                                                                  :id => id,
@@ -76,7 +76,7 @@ module Sequent
         # Parameters
         #   +field+ the name of the attribute within the current object.
         #   +options+ Hash with optional attributes.
-        #               :value - the default value if the current object has none
+        #               :default - the default value if the current object has none
         #               :class - the css class
         def raw_hidden(field, options={})
           raw_field(field, "hidden", options)
@@ -89,10 +89,10 @@ module Sequent
         #   +field+ the name of the attribute within the current object.
         #   +values+ an array of pairs (arrays) of [value, text_to_display]
         #   +options+ Hash with optional attributes.
-        #               :value - the default value if the current object has none
+        #               :default - the default value if the current object has none
         #               :class - the css class
         def raw_select(field, values, options={})
-          value = param_or_default(field, options[:value])
+          value = param_or_default(field, options[:default], options)
           content = ""
           css_id = options[:id] || calculate_id(field)
           Array(values).each do |val|
@@ -113,7 +113,7 @@ module Sequent
         # Parameters
         #   +field+ the name of the attribute within the current object.
         #   +options+ Hash with optional attributes.
-        #               :value - the value of the radio option
+        #               :default - the value of the radio option
         #               :checked - does this radio need to be checked
         #               :class - the css class
         def raw_radio(field, options = {})
@@ -141,7 +141,8 @@ module Sequent
           "#{reverse_names.first}#{reverse_names[1..-1].map { |n| n == '[]' ? n : "[#{n}]" }.join}"
         end
 
-        def param_or_default(field, default)
+        def param_or_default(field, default, options = {})
+          return options[:value] if options.has_key?(:value)
           @values.nil? ? default : @values.has_key?(field.to_s) ? @values[field.to_s] || default : default
         end
 
@@ -191,7 +192,7 @@ module Sequent
 
 
         def raw_field(field, field_type, options)
-          value = param_or_default(field, options[:value])
+          value = param_or_default(field, options[:default], options)
           if options[:formatter]
             value = self.send(options[:formatter], value)
             options.delete(:formatter)
