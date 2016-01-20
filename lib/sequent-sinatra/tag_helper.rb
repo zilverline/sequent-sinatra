@@ -41,6 +41,18 @@ module Sequent
         end
 
         ##
+        # Creates a <input type=email>
+        #
+        # Parameters
+        #   +field+ the name of the attribute within the current object.
+        #   +options+ Hash with optional attributes.
+        #               :default - the default value if the current object has none
+        #               :class - the css class
+        def raw_email(field, options={})
+          raw_field(field, "email", options)
+        end
+
+        ##
         # Creates a <input type=password>
         #
         # Parameters
