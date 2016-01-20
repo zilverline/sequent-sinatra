@@ -244,4 +244,31 @@ describe Sequent::Web::Sinatra::Fieldset do
     end
 
   end
+
+  describe ".raw_email" do
+    let(:fieldset) { Sequent::Web::Sinatra::Fieldset.new(app, :foo, {}, {}) }
+    it "should create a checkbox" do
+      tag = fieldset.raw_email("field")
+      expect(tag).to eq %Q{<input id="foo_field" name="foo[field]" type="email" />}
+    end
+
+    it "can override the id" do
+      tag = fieldset.raw_email("field", {id: "bar_field"})
+      expect(tag).to eq %Q{<input id="bar_field" name="foo[field]" type="email" />}
+    end
+
+    it "uses the given value if any" do
+      tag = fieldset.raw_email("field", {default: "ben@ajax.nl"})
+      expect(tag).to eq %Q{<input id="foo_field" name="foo[field]" type="email" value="ben@ajax.nl" />}
+    end
+
+    context "with value" do
+      let(:fieldset) { Sequent::Web::Sinatra::Fieldset.new(app, "foo", {"foo" => {"field" => "ben@ajax.nl"}}, {}) }
+      it "prefill with actual value" do
+        tag = fieldset.raw_email("field")
+        expect(tag).to eq %Q{<input id="foo_field" name="foo[field]" type="email" value="ben@ajax.nl" />}
+      end
+    end
+  end
+
 end
