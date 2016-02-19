@@ -202,7 +202,6 @@ module Sequent
           html_attrs.chop
         end
 
-
         def raw_field(field, field_type, options)
           value = param_or_default(field, options.delete(:default), options)
           if options[:formatter]
@@ -211,12 +210,22 @@ module Sequent
           end
           #TODO use calculate_id
           id = options[:id] || calculate_id(field)
+          options.merge!(data_attributes(options.delete(:data)))
           single_tag :input, options.merge(
-                             :type => field_type,
-                             :id => id,
-                             :name => calculate_name(field),
-                             :value => value
-                           )
+            :type => field_type,
+            :id => id,
+            :name => calculate_name(field),
+            :value => value,
+          )
+        end
+
+        def data_attributes(data, prefix = 'data')
+          case data
+          when Hash
+            data.reduce({}) { |memo, (key, value)| memo.merge(data_attributes(value, "#{prefix}-#{key}")) }
+          else
+            { prefix.gsub('_', '-').to_sym => data }
+          end
         end
 
         def tree_in_names(field, postfix_method_name)
