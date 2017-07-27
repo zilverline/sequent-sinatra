@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency             'sequent', '~> 1.0'
   s.add_dependency             'activerecord', '~> 5.0.0'
-  s.add_dependency             'sinatra', '~> 1.4'
+  s.add_dependency             'sinatra', '~> 2.0'
   s.add_dependency             'rack_csrf', '~> 2.5'
   s.add_development_dependency 'rack-test', '~> 0.6'
   s.add_development_dependency 'rspec', '~> 3.2'
