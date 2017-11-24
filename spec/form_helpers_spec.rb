@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'active_support/core_ext'
 
 describe Sequent::Web::Sinatra::FormHelpers do
   let(:app) { MockAppForFormHelper.new.helpers }
