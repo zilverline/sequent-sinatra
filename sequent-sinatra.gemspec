@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency              'activerecord', active_star_version
 
-  s.add_dependency             'sequent', '~> 2.0'
+  s.add_dependency             'sequent', '~> 3.0'
   s.add_dependency             'sinatra', '~> 2.0'
   s.add_dependency             'rack_csrf', '~> 2.5'
   s.add_development_dependency 'rack-test', '~> 0.6'
