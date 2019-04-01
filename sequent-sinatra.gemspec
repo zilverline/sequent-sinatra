@@ -13,11 +13,11 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/zilverline/sequent-sinatra'
   s.license       = 'MIT'
 
-  active_star_version = ENV['ACTIVE_STAR_VERSION'] || ['>= 4.0', '< 5.2']
+  active_star_version = ENV['ACTIVE_STAR_VERSION'] || ['>= 5.0', '< 5.3']
 
   s.add_dependency              'activerecord', active_star_version
 
-  s.add_dependency             'sequent', '~> 2.0'
+  s.add_dependency             'sequent', '~> 3.1'
   s.add_dependency             'sinatra', '~> 2.0'
   s.add_dependency             'rack_csrf', '~> 2.5'
   s.add_development_dependency 'rack-test', '~> 0.6'
