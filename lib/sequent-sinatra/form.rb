@@ -37,8 +37,9 @@ module Sequent
           out = tag(:form, nil, {:action => @action, :method => @method.to_s.upcase}.merge(@options)) + method_input + csrf_tag
           out << inner_html
           out << '</form>'
-          buf = @context.instance_variable_get("@_out_buf")
-          buf << out
+
+          buf = @context.instance_variable_get("@_out_buf").dup
+          @context.instance_variable_set("@_out_buf", buf << out)
         end
 
         def fieldset(obj_name, options = {}, &block)
@@ -68,4 +69,3 @@ module Sequent
     end
   end
 end
-
